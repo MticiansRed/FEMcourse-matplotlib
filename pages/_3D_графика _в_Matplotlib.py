@@ -408,7 +408,7 @@ if menu == "Векторные поля":
 		# with the help of x,y and z
 		# which will form the direction vectors
 		u = X/a**2
-		v = Y/b**2
+		v = -Y/b**2
 		norm = np.sqrt(u**2+v**2)
 		norm_colors = Normalize()
 		norm_flat = norm.flatten()
