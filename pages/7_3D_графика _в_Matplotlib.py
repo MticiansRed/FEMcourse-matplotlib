@@ -267,7 +267,7 @@ if menu == "Поверхности":
 		c1, c2, = st.columns([5,1]) 
 		c1.pyplot(fig)
 	def plot2ord():
-		option = st.selectbox("Выберите поверхность",("Гиперболический параболоид", "Эллиптический параболоид", "Эллипсоид"),)
+		option = st.selectbox("Выберите поверхность",("Эллиптический параболоид", "Гиперболический параболоид", "Эллипсоид"),)
 		x_domain = st.text_input("x", value="-10, 10, 0.1", key = "input_x_2ord")
 		y_domain = st.text_input("y", value="-10, 10, 0.1", key = "input_y_2ord")
 		x_domain = parse_inp(x_domain)
@@ -421,7 +421,7 @@ if menu == "Векторные поля":
 		#v = v/norm
 		# Creating a quiver plot with length of the direction
 		# vector length as 0.2 ad normalise as true
-		ax.plot_surface(X, Y, Z, color="red")
+		ax.plot_surface(X, Y, Z, cmap="plasma")
 		ax.quiver(X, Y, Z, u, v, w, color = colors, length=scale, normalize=normalize_flag)
 		 
 		#showing the above plot
