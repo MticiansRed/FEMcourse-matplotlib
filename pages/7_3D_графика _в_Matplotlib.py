@@ -38,8 +38,6 @@ if menu == "Простейший 3D-график":
 
 Построим трехмерную кривую.
 
-Введите координаты точек в формате: $(x_1,y_1,z_1), (x_2,y_2,z_2)$ ...
-
 	"""
 	def parse_inp(inp):
 		# Удаляем пробелы из строки
@@ -142,10 +140,12 @@ if menu == "Простейший 3D-график":
 				st.write("Некорректный ввод!")
 		if c2.button("Случайный график"):
 			plot_curve_points_random()
+	showcode_1()
+	"""
+	Введите координаты точек в формате: $(x_1,y_1,z_1), (x_2,y_2,z_2)$ ...
+	"""
 	makepage()
 	c1, c2, = st.columns([1,1])
-	if c1.button("Показать код"):
-		showcode_1()
 
 
 if menu == "Поверхности":
@@ -156,6 +156,65 @@ if menu == "Поверхности":
 Определите область, в которой будет строится график. Для этого введите в текстовое поле интервалы, задающие область в формате: $(x_0, x_1, $step$)$.
 
 	"""
+	def showcode_2():
+		code = '''
+		def cos_pix2(x):
+			return np.cos(x* np.pi/2)
+		def sin_pix2(x):
+			return np.sin(x* np.pi/2)
+		def xpow2(x):
+			return x**2
+		def frac_1_x(x):
+			return 1/x
+		def plot_surface_fromfunc(f, domain_x, domain_y):
+			fig = plt.figure()
+			# defining a sub-plot with 1x2 axis and defining 
+			# it as first plot with projection as 3D
+			ax = fig.add_subplot(1, 2, 1, projection='3d')
+			 
+			x1= np.arange(domain_x[0], domain_x[1], domain_x[2])
+			y1= np.arange(domain_y[0], domain_y[1], domain_y[2])
+			 
+			# Creating a mesh grid with x ,y and x1,
+			# y1 which creates an n-dimensional
+			# array
+			x1,y1= np.meshgrid(x1,y1)
+			z1= f(x1)
+			ax.set_xlabel('x', fontsize=12)
+			ax.set_ylabel('y', fontsize=12)
+			ax.set_zlabel('z', fontsize=12)
+			ax.plot_surface(x1, y1, z1, color="red")
+			c1, c2, = st.columns([5,1]) 
+			c1.pyplot(fig)
+			
+			
+		def hyperbolic_paraboloid(x,y,a,b):
+			return (0.5)*(x**2/a**2-y**2/b**2)
+		def elliptic_paraboloid(x,y,a,b):
+			return (0.5)*(x**2/a**2+y**2/b**2)
+		def ellipsoid(x,y,a,b): #c = 1
+			return np.sqrt(1-x**2/a**2-y**2/b**2) if (1-x**2/a**2-y**2/b**2).any () >0 else 0
+		def plot_surface_2ord(f, a, b, domain_x, domain_y):
+			fig = plt.figure()
+			 
+			# defining a sub-plot with 1x2 axis and defining 
+			# it as first plot with projection as 3D
+			ax = fig.add_subplot(1, 2, 1, projection='3d')
+			x1= np.arange(domain_x[0], domain_x[1], domain_x[2])
+			y1= np.arange(domain_y[0], domain_y[1], domain_y[2])
+			 
+			# Creating a mesh grid with x ,y and x1,
+			# y1 which creates an n-dimensional
+			# array
+			x1,y1= np.meshgrid(x1,y1)
+			z1= f(x1, y1, a,b)
+			ax.set_xlabel('x', fontsize=12)
+			ax.set_ylabel('y', fontsize=12)
+			ax.set_zlabel('z', fontsize=12)
+			ax.plot_surface(x1, y1, z1, color="red")
+			c1, c2, = st.columns([5,1]) 
+			c1.pyplot(fig)'''
+		st.code(code, language = "python")
 	def parse_inp(inp):
 		# Удаляем пробелы из строки
 		inp = inp.replace(" ", "")
@@ -313,70 +372,7 @@ if menu == "Поверхности":
 		a = st.slider("альфа", 0., 1., value = 0.5, step = 0.1)
 		plotcolored(str(option), a)
 	plot2ord_2()
-	def showcode_2():
-		code = '''
-		def cos_pix2(x):
-			return np.cos(x* np.pi/2)
-		def sin_pix2(x):
-			return np.sin(x* np.pi/2)
-		def xpow2(x):
-			return x**2
-		def frac_1_x(x):
-			return 1/x
-		def plot_surface_fromfunc(f, domain_x, domain_y):
-			fig = plt.figure()
-			# defining a sub-plot with 1x2 axis and defining 
-			# it as first plot with projection as 3D
-			ax = fig.add_subplot(1, 2, 1, projection='3d')
-			 
-			x1= np.arange(domain_x[0], domain_x[1], domain_x[2])
-			y1= np.arange(domain_y[0], domain_y[1], domain_y[2])
-			 
-			# Creating a mesh grid with x ,y and x1,
-			# y1 which creates an n-dimensional
-			# array
-			x1,y1= np.meshgrid(x1,y1)
-			z1= f(x1)
-			ax.set_xlabel('x', fontsize=12)
-			ax.set_ylabel('y', fontsize=12)
-			ax.set_zlabel('z', fontsize=12)
-			ax.plot_surface(x1, y1, z1, color="red")
-			c1, c2, = st.columns([5,1]) 
-			c1.pyplot(fig)
-			
-			
-		def hyperbolic_paraboloid(x,y,a,b):
-			return (0.5)*(x**2/a**2-y**2/b**2)
-		def elliptic_paraboloid(x,y,a,b):
-			return (0.5)*(x**2/a**2+y**2/b**2)
-		def ellipsoid(x,y,a,b): #c = 1
-			return np.sqrt(1-x**2/a**2-y**2/b**2) if (1-x**2/a**2-y**2/b**2).any () >0 else 0
-		def plot_surface_2ord(f, a, b, domain_x, domain_y):
-			fig = plt.figure()
-			 
-			# defining a sub-plot with 1x2 axis and defining 
-			# it as first plot with projection as 3D
-			ax = fig.add_subplot(1, 2, 1, projection='3d')
-			x1= np.arange(domain_x[0], domain_x[1], domain_x[2])
-			y1= np.arange(domain_y[0], domain_y[1], domain_y[2])
-			 
-			# Creating a mesh grid with x ,y and x1,
-			# y1 which creates an n-dimensional
-			# array
-			x1,y1= np.meshgrid(x1,y1)
-			z1= f(x1, y1, a,b)
-			ax.set_xlabel('x', fontsize=12)
-			ax.set_ylabel('y', fontsize=12)
-			ax.set_zlabel('z', fontsize=12)
-			ax.plot_surface(x1, y1, z1, color="red")
-			c1, c2, = st.columns([5,1]) 
-			c1.pyplot(fig)'''
-		st.code(code, language = "python")
-	
-	c1, c2, = st.columns([1,1])
-	if c1.button("Показать код"):
-		showcode_2()
-
+	showcode_2()
 if menu == "Векторные поля":
 	r"""
 ##### Векторные поля, или quiver plot -- функция Matplotlib, позволяющая строить произвольные векторные поля.
@@ -384,6 +380,33 @@ if menu == "Векторные поля":
  векторы градиента $\nabla z$ задающей его функции $z=f(x,y)$.
 
 	"""
+	def showcode_3():
+		code = '''
+		def plot_quiver3d(a, b, density, scale, normalize_flag):
+			fig = plt.figure()
+			ax = fig.add_subplot(projection='3d')
+			x = np.linspace(-10, 10, int(30*density+10))
+			y = np.linspace(-10, 10, int(30*density+10))
+			X, Y = np.meshgrid(x, y)
+			
+			Z = hyperbolic_paraboloid(X, Y, a, b)
+			u = X/a**2
+			v = Y/b**2
+			norm = np.sqrt(u**2+v**2)
+			norm_colors = Normalize()
+			norm_flat = norm.flatten()
+			colors = plt.cm.viridis(norm_colors(norm_flat))
+			w = 0
+			
+			cbar = plt.colorbar(plt.cm.ScalarMappable(norm=norm_colors, cmap=plt.cm.viridis), ax=ax)
+			cbar.set_label('Norm')
+			
+			ax.plot_surface(X, Y, Z, color="red")
+			ax.quiver(X, Y, Z, u, v, w, color = colors, length=scale, normalize=normalize_flag)
+			 
+			c1, c2, = st.columns([5,1]) 
+			c1.pyplot(fig)'''
+		st.code(code, language = "python")
 	def hyperbolic_paraboloid(x,y,a,b):
 		return (0.5)*(x**2/a**2-y**2/b**2)
 	def plot_quiver3d(a, b, density, scale, normalize_flag):
@@ -438,37 +461,6 @@ if menu == "Векторные поля":
 			plot_quiver3d(a, b, density, scale, True)
 		else:
 			plot_quiver3d(a, b, density, scale, False)
-
+	showcode_3()
 	quivers()
-	def showcode_3():
-		code = '''
-		def plot_quiver3d(a, b, density, scale, normalize_flag):
-			fig = plt.figure()
-			ax = fig.add_subplot(projection='3d')
-			x = np.linspace(-10, 10, int(30*density+10))
-			y = np.linspace(-10, 10, int(30*density+10))
-			X, Y = np.meshgrid(x, y)
-			
-			Z = hyperbolic_paraboloid(X, Y, a, b)
-			u = X/a**2
-			v = Y/b**2
-			norm = np.sqrt(u**2+v**2)
-			norm_colors = Normalize()
-			norm_flat = norm.flatten()
-			colors = plt.cm.viridis(norm_colors(norm_flat))
-			w = 0
-			
-			cbar = plt.colorbar(plt.cm.ScalarMappable(norm=norm_colors, cmap=plt.cm.viridis), ax=ax)
-			cbar.set_label('Norm')
-			
-			ax.plot_surface(X, Y, Z, color="red")
-			ax.quiver(X, Y, Z, u, v, w, color = colors, length=scale, normalize=normalize_flag)
-			 
-			c1, c2, = st.columns([5,1]) 
-			c1.pyplot(fig)'''
-		st.code(code, language = "python")
-	
-	c1, c2, = st.columns([1,1])
-	if c1.button("Показать код"):
-		showcode_3()
 	

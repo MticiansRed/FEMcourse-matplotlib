@@ -157,7 +157,7 @@ if type == "Чтение из стороннего файла":
 	    # Загрузка файла пользователем
 		uploaded_file = st.file_uploader("Загрузите CSV-файл", type=["csv"])
 	else:
-		uploaded_file = "./data/test.csv"
+		uploaded_file = "pages/data/test.csv"
 
 	if uploaded_file is not None:
 	    # Чтение данных из загруженного файла
