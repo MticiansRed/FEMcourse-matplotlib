@@ -29,7 +29,7 @@ if menu == "Общая информация":
 
 Необходимые импорты:
 	""" 
-	codes = ['''import streamlit''', '''import matplotlib.pyplot''', '''import numpy''', '''from mpl_toolkits import mplot3d''', '''from mpl_toolkits import axes3d''',  '''import matplotlib.colors''']
+	codes = ['''import matplotlib.pyplot''', '''import numpy''', '''from mpl_toolkits import mplot3d''', '''from mpl_toolkits import axes3d''',  '''import matplotlib.colors''']
 	for code in codes:
 		st.code(code, language = "python")
 if menu == "Простейший 3D-график":
@@ -381,7 +381,7 @@ if menu == "Векторные поля":
 	r"""
 ##### Векторные поля, или quiver plot -- функция Matplotlib, позволяющая строить произвольные векторные поля.
 Рассмотрим пример: возьмем уже хорошо знакомый нам гиперболический параболоид и построим на его поверхности
- векторы градиенты $\nabla z$ задающей его функции $z=f(x,y)$.
+ векторы градиента $\nabla z$ задающей его функции $z=f(x,y)$.
 
 	"""
 	def hyperbolic_paraboloid(x,y,a,b):
