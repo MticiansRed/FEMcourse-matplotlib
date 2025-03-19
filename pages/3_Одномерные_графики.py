@@ -7,7 +7,7 @@ menu = st.sidebar.radio(
     'Меню',
     (
         "Одномерные графики",
-        "Линейный график",
+        "Круговая диаграмма",
         "Гистограмма",
         "Boxplot (Ящик с усами)"
     )
@@ -19,53 +19,64 @@ if menu == "Одномерные графики":
     Теперь, когда мы познакомились с основными возможностями Matplotlib, давайте сосредоточимся на **одномерных графиках**. Эти графики — мощный инструмент для анализа и визуализации данных, которые зависят от одного измерения (например, времени, индекса или категории). В библиотеке существует множество типов одномерных графиков, но мы рассмотрим только основные из них.
     """)
 
-
-if menu == "Линейный график":
+# Раздел "Круговая диаграмма"
+if menu == "Круговая диаграмма":
     st.markdown("""
-    ### Линейный график
-    Линейный график отображает изменение одной переменной (например, y) по индексу или времени.
-    - **Как использовать**: функция plt.plot().
+    ### Круговая диаграмма
+    Круговая диаграмма используется для визуализации пропорций или процентного соотношения частей целого.
+        
     """)
-    
-    def plot_line_graph(y_values, line_color, line_style, line_width, show_legend, show_grid, figsize):
-        x_values = np.arange(len(y_values))  # Индексы для оси X
+
+    def plot_pie_chart(sizes, labels, colors, figsize):
         fig, ax = plt.subplots(figsize=figsize)
-        ax.plot(x_values, y_values, label="y = f(x)", color=line_color, linestyle=line_style, linewidth=line_width)
-        ax.set_xlabel("Индекс")
-        ax.set_ylabel("Значение")
-
-        if show_legend:
-            ax.legend()
-
-        if show_grid:
-            ax.grid(True)
-
+        ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+        ax.axis('equal')  # Чтобы диаграмма была круглой
         st.pyplot(fig)
 
-    def line_graph_page():
-        y_input = st.text_input("Введите значения Y через запятую", value="1,4,9,16,25")
-        y_values = list(map(float, y_input.split(',')))
+    def pie_chart_page():
+        sizes_input = st.text_input("Введите значения для каждой категории через запятую", value="30, 20, 50")
+        labels_input = st.text_input("Введите названия категорий через запятую", value="Категория A, Категория B, Категория C")
 
-        # Настройки графика
-        st.markdown("### Настройки графика")
-        line_color = st.color_picker("Выберите цвет линии", "#1f77b4")
-        line_style = st.selectbox("Выберите стиль линии", ["-", "--", "-.", ":"])
-        line_width = st.slider("Толщина линии", 1, 10, 2)
-        show_legend = st.checkbox("Показать легенду", value=True)
-        show_grid = st.checkbox("Показать сетку", value=True)
-        figsize = st.slider("Размер графика", 5, 15, 10)
+        sizes = list(map(float, sizes_input.split(',')))
+        labels = labels_input.split(',')
 
-        if st.button("Построить график"):
-            plot_line_graph(y_values, line_color, line_style, line_width, show_legend, show_grid, (figsize, figsize))
+        # Настройки диаграммы
+        st.markdown("### Настройки круговой диаграммы")
+        colors = st.multiselect(
+            "Выберите цвета для категорий",
+            ["red", "blue", "green", "yellow", "purple", "orange"],
+            default=["red", "blue", "green"]
+        )
+        figsize = st.slider("Размер графика", 5, 15, 8)
 
-    line_graph_page()
+        if st.button("Построить круговую диаграмму"):
+            if len(colors) < len(sizes):
+                st.warning("Количество цветов должно быть не меньше количества категорий.")
+            else:
+                plot_pie_chart(sizes, labels, colors, (figsize, figsize))
+
+    pie_chart_page()
+
+    # Кнопка "Показать код"
+    def showcode_pie():
+        code = '''
+        def plot_pie_chart(sizes, labels, colors, figsize):
+            fig, ax = plt.subplots(figsize=figsize)
+            ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+            ax.axis('equal')
+            st.pyplot(fig)
+        '''
+        st.code(code, language="python")
+
+    st.markdown("---")
+    if st.button("Показать код для круговой диаграммы"):
+        showcode_pie()
 
 # Раздел "Гистограмма"
 if menu == "Гистограмма":
     st.markdown("""
     ### Гистограмма
     Гистограмма показывает распределение одной переменной, разбивая данные на интервалы (бины) и отображая частоту попадания данных в каждый интервал.
-    - **Как использовать**: функция plt.hist().
     """)
 
     def plot_histogram(data, bins, bar_color, edge_color, show_grid, figsize):
@@ -96,12 +107,29 @@ if menu == "Гистограмма":
 
     histogram_page()
 
+    # Кнопка "Показать код"
+    def showcode_hist():
+        code = '''
+        def plot_histogram(data, bins, bar_color, edge_color, show_grid, figsize):
+            fig, ax = plt.subplots(figsize=figsize)
+            ax.hist(data, bins=bins, color=bar_color, edgecolor=edge_color)
+            ax.set_xlabel("Значения")
+            ax.set_ylabel("Частота")
+            if show_grid:
+                ax.grid(True)
+            st.pyplot(fig)
+        '''
+        st.code(code, language="python")
+
+    st.markdown("---")
+    if st.button("Показать код для гистограммы"):
+        showcode_hist()
+
 # Раздел "Boxplot (Ящик с усами)"
 if menu == "Boxplot (Ящик с усами)":
     st.markdown("""
     ### Boxplot (Ящик с усами)
     Boxplot визуализирует статистику одной переменной, включая медиану, квантили, выбросы и разброс данных.
-    - **Как использовать**: функция plt.boxplot().
     """)
 
     def plot_boxplot(data, figsize):
@@ -119,3 +147,18 @@ if menu == "Boxplot (Ящик с усами)":
             plot_boxplot(data, (figsize, figsize))
 
     boxplot_page()
+
+    # Кнопка "Показать код"
+    def showcode_boxplot():
+        code = '''
+        def plot_boxplot(data, figsize):
+            fig, ax = plt.subplots(figsize=figsize)
+            ax.boxplot(data)
+            ax.set_ylabel("Значения")
+            st.pyplot(fig)
+        '''
+        st.code(code, language="python")
+
+    st.markdown("---")
+    if st.button("Показать код для Boxplot"):
+        showcode_boxplot()

@@ -12,6 +12,95 @@ menu = st.sidebar.radio(
     )
 )
 
+# Раздел: Установка на Windows
+if menu == "Windows":
+    st.header("Установка Matplotlib на Windows")
+    st.write("""
+    ### Шаг 1: Убедитесь, что Python установлен
+    Проверьте, установлен ли Python, выполнив команду в командной строке:
+    ```bash
+    python --version
+    ```
+    Если Python не установлен, скачайте его с [официального сайта](https://www.python.org/).
+    """)
+
+    # Интерактив: Проверка версии Python
+    if st.button("Проверить версию Python (Windows)"):
+        result = subprocess.run([sys.executable, "--version"], capture_output=True, text=True)
+        if result.returncode == 0:
+            st.success(f"Установленная версия Python: {result.stdout}")
+        else:
+            st.error("Python не установлен или не настроен корректно.")
+
+    st.write("""
+    ### Шаг 2: Установите pip (если не установлен)
+    Убедитесь, что pip установлен. Если нет, установите его:
+    ```bash
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python get-pip.py
+    ```
+    """)
+
+    # Интерактив: Установка pip
+    if st.button("Установить pip (Windows)"):
+        result = subprocess.run(["curl", "https://bootstrap.pypa.io/get-pip.py", "-o", "get-pip.py"], capture_output=True, text=True)
+        if result.returncode == 0:
+            result = subprocess.run([sys.executable, "get-pip.py"], capture_output=True, text=True)
+            if result.returncode == 0:
+                st.success("pip успешно установлен!")
+            else:
+                st.error("Ошибка при установке pip. Подробности:")
+                st.code(result.stderr)
+        else:
+            st.error("Ошибка при загрузке get-pip.py. Подробности:")
+            st.code(result.stderr)
+
+    st.write("""
+    ### Шаг 3: Установите Matplotlib через pip
+    Установите Matplotlib с помощью pip:
+    ```bash
+    pip install matplotlib
+    ```
+    Если у вас несколько версий Python, используйте `pip3`:
+    ```bash
+    pip3 install matplotlib
+    ```
+    """)
+
+    # Интерактив: Установка Matplotlib
+    if st.button("Установить Matplotlib (Windows)"):
+        result = subprocess.run([sys.executable, "-m", "pip", "install", "matplotlib"], capture_output=True, text=True)
+        if result.returncode == 0:
+            st.success("Matplotlib успешно установлен!")
+        else:
+            st.error("Ошибка при установке Matplotlib. Подробности:")
+            st.code(result.stderr)
+
+    st.write("""
+    ### Шаг 4: Проверка установки Matplotlib
+    После установки проверьте, что Matplotlib работает корректно. Для этого выполните следующий код:
+    ```python
+    import matplotlib.pyplot as plt
+    plt.plot([1, 2, 3, 4])
+    plt.show()
+    ```
+    Если график отображается, значит, Matplotlib установлен правильно.
+    """)
+
+    # Интерактив: Проверка работы Matplotlib
+    if st.button("Проверить работу Matplotlib (Windows)"):
+        try:
+            import matplotlib.pyplot as plt
+            fig, ax = plt.subplots()
+            ax.plot([1, 2, 3, 4])
+            ax.set_title("Проверка Matplotlib")
+            ax.set_xlabel("Ось X")
+            ax.set_ylabel("Ось Y")
+            st.pyplot(fig)
+            st.success("Matplotlib работает корректно!")
+        except ImportError:
+            st.error("Matplotlib не установлен или произошла ошибка при импорте.")
+
 # Раздел: Установка на Linux
 if menu == "Linux":
     st.header("Установка Matplotlib на Linux")
@@ -24,7 +113,7 @@ if menu == "Linux":
     Если Python не установлен, установите его с помощью пакетного менеджера:
     ```bash
     sudo apt update
-    sudo apt install python3
+    sudo apt-get install python3
     ```
     """)
 
@@ -37,24 +126,26 @@ if menu == "Linux":
             st.error("Python не установлен или не настроен корректно.")
 
     st.write("""
-    ### Шаг 2: Установите Matplotlib через pip
-    Установите Matplotlib с помощью pip:
+    ### Шаг 2: Установите Matplotlib через apt
+    Установите Matplotlib с помощью пакетного менеджера apt:
     ```bash
-    pip3 install matplotlib
-    ```
-    Если pip не установлен, установите его:
-    ```bash
-    sudo apt install python3-pip
+    sudo apt update
+    sudo apt-get install python3-matplotlib
     ```
     """)
 
     # Интерактив: Установка Matplotlib
     if st.button("Установить Matplotlib (Linux)"):
-        result = subprocess.run(["pip3", "install", "matplotlib"], capture_output=True, text=True)
+        result = subprocess.run(["sudo", "apt-get", "update"], capture_output=True, text=True)
         if result.returncode == 0:
-            st.success("Matplotlib успешно установлен!")
+            result = subprocess.run(["sudo", "apt-get", "install", "-y", "python3-matplotlib"], capture_output=True, text=True)
+            if result.returncode == 0:
+                st.success("Matplotlib успешно установлен!")
+            else:
+                st.error("Ошибка при установке Matplotlib. Подробности:")
+                st.code(result.stderr)
         else:
-            st.error("Ошибка при установке Matplotlib. Подробности:")
+            st.error("Ошибка при обновлении пакетов. Подробности:")
             st.code(result.stderr)
 
     st.write("""
@@ -81,74 +172,6 @@ if menu == "Linux":
             st.success("Matplotlib работает корректно!")
         except ImportError:
             st.error("Matplotlib не установлен или произошла ошибка при импорте.")
-
-
-# Раздел: Установка на Windows
-if menu == "Windows":
-    st.header("Установка Matplotlib на Windows")
-    st.write("""
-    ### Шаг 1: Убедитесь, что Python установлен
-    Проверьте, установлен ли Python, выполнив команду в командной строке:
-    ```bash
-    python --version
-    ```
-    Если Python не установлен, скачайте его с [официального сайта](https://www.python.org/).
-    """)
-
-    # Интерактив: Проверка версии Python
-    if st.button("Проверить версию Python (Windows)"):
-        result = subprocess.run([sys.executable, "--version"], capture_output=True, text=True)
-        if result.returncode == 0:
-            st.success(f"Установленная версия Python: {result.stdout}")
-        else:
-            st.error("Python не установлен или не настроен корректно.")
-
-    st.write("""
-    ### Шаг 2: Установите Matplotlib через pip
-    Откройте командную строку и выполните команду:
-    ```bash
-    pip install matplotlib
-    ```
-    Если у вас несколько версий Python, используйте `pip3`:
-    ```bash
-    pip3 install matplotlib
-    ```
-    """)
-
-    # Интерактив: Установка Matplotlib
-    if st.button("Установить Matplotlib (Windows)"):
-        result = subprocess.run([sys.executable, "-m", "pip", "install", "matplotlib"], capture_output=True, text=True)
-        if result.returncode == 0:
-            st.success("Matplotlib успешно установлен!")
-        else:
-            st.error("Ошибка при установке Matplotlib. Подробности:")
-            st.code(result.stderr)
-
-    st.write("""
-    ### Шаг 3: Проверка установки Matplotlib
-    После установки проверьте, что Matplotlib работает корректно. Для этого выполните следующий код:
-    ```python
-    import matplotlib.pyplot as plt
-    plt.plot([1, 2, 3, 4])
-    plt.show()
-    ```
-    Если график отображается, значит, Matplotlib установлен правильно.
-    """)
-
-    # Интерактив: Проверка работы Matplotlib
-    if st.button("Проверить работу Matplotlib (Windows)"):
-        try:
-            import matplotlib.pyplot as plt
-            fig, ax = plt.subplots()
-            ax.plot([1, 2, 3, 4])
-            ax.set_title("Проверка Matplotlib")
-            ax.set_xlabel("Ось X")
-            ax.set_ylabel("Ось Y")
-            st.pyplot(fig)
-            st.success("Matplotlib работает корректно!")
-        except ImportError:
-            st.error("Matplotlib не установлен или произошла ошибка при импорте.")
-
 
 # Раздел: Установка на macOS
 if menu == "macOS":
@@ -178,15 +201,33 @@ if menu == "macOS":
             st.error("Python не установлен или не настроен корректно.")
 
     st.write("""
-    ### Шаг 2: Установите Matplotlib через pip
-    Установите Matplotlib с помощью pip:
-    ```bash
-    pip3 install matplotlib
-    ```
-    Если pip не установлен, установите его:
+    ### Шаг 2: Установите pip (если не установлен)
+    Убедитесь, что pip установлен. Если нет, установите его:
     ```bash
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
     python3 get-pip.py
+    ```
+    """)
+
+    # Интерактив: Установка pip
+    if st.button("Установить pip (macOS)"):
+        result = subprocess.run(["curl", "https://bootstrap.pypa.io/get-pip.py", "-o", "get-pip.py"], capture_output=True, text=True)
+        if result.returncode == 0:
+            result = subprocess.run(["python3", "get-pip.py"], capture_output=True, text=True)
+            if result.returncode == 0:
+                st.success("pip успешно установлен!")
+            else:
+                st.error("Ошибка при установке pip. Подробности:")
+                st.code(result.stderr)
+        else:
+            st.error("Ошибка при загрузке get-pip.py. Подробности:")
+            st.code(result.stderr)
+
+    st.write("""
+    ### Шаг 3: Установите Matplotlib через pip
+    Установите Matplotlib с помощью pip:
+    ```bash
+    pip3 install matplotlib
     ```
     """)
 
@@ -200,7 +241,7 @@ if menu == "macOS":
             st.code(result.stderr)
 
     st.write("""
-    ### Шаг 3: Проверка установки Matplotlib
+    ### Шаг 4: Проверка установки Matplotlib
     После установки проверьте, что Matplotlib работает корректно. Для этого выполните следующий код:
     ```python
     import matplotlib.pyplot as plt
@@ -223,5 +264,4 @@ if menu == "macOS":
             st.success("Matplotlib работает корректно!")
         except ImportError:
             st.error("Matplotlib не установлен или произошла ошибка при импорте.")
-
 
